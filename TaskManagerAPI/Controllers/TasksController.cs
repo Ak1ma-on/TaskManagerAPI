@@ -16,13 +16,15 @@ namespace TaskManagerAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok("Список будет здесь");
+            return Ok(_taskService.GetAll());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            return Ok($"Ищем задачу {id}");
+            var task = _taskService.GetById(id);
+            if (task == null) return NotFound();
+            return Ok(task);
         }
 
 

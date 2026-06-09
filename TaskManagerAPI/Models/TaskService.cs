@@ -12,6 +12,11 @@
             _currentId++;
         }
 
+        public TaskItem? GetById(int id)
+        {
+            return _tasks.FirstOrDefault(x => x.Id == id);
+        }
+
         public bool RemoveTask(int id)
         {
             TaskItem taskToDelete = _tasks.Find(x => x.Id == id);
@@ -25,7 +30,7 @@
 
         public List<TaskItem> GetAll()
         {
-            return _tasks;
+            return _tasks.ToList();
         }
 
         public bool MarkAsCompleted(int id)
