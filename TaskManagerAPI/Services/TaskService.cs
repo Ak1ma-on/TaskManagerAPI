@@ -1,6 +1,6 @@
-﻿namespace TaskManagerAPI.Models
+﻿namespace TaskManagerAPI.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
         private int _currentId = 1;
         private List<TaskItem> _tasks = new List<TaskItem>();

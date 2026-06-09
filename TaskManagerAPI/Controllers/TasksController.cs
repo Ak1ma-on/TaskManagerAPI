@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Models;
+using TaskManagerAPI.Services;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -7,8 +8,8 @@ namespace TaskManagerAPI.Controllers
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
     {
-        private TaskService _taskService;
-        public TasksController(TaskService taskService) 
+        private ITaskService _taskService;
+        public TasksController(ITaskService taskService) 
         {
             _taskService = taskService;
         }

@@ -1,6 +1,15 @@
-@TaskManagerAPI_HostAddress = http://localhost:5019
+@TaskManagerAPI_HostAddress = https://localhost:7263
 
-GET {{TaskManagerAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{TaskManagerAPI_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+  "name": "—ходить в уник",
+  "description": "завтра"
+}
+
+###
+
+GET {{TaskManagerAPI_HostAddress}}/api/tasks
 
 ###

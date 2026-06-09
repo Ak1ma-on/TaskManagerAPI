@@ -12,4 +12,10 @@
         Description = description;
         IsCompleted = false;
     }
+    public TaskItem(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+        IsCompleted = false;
+    }
 }
