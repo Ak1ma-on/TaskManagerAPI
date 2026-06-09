@@ -5,19 +5,27 @@
         private int _currentId = 1;
         private List<TaskItem> _tasks = new List<TaskItem>();
 
-        public void AddTask(string name, string? description)
+        public Task AddTaskAsync(string name, string? description)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Пустое название задачи");
             _tasks.Add(new TaskItem(_currentId, name, description));
             _currentId++;
+            return Task.CompletedTask;
         }
 
-        public TaskItem? GetById(int id)
+        private TaskItem? GetById(int id)
         {
-            return _tasks.FirstOrDefault(x => x.Id == id);
+            var task = _tasks.FirstOrDefault(x => x.Id == id);
+            return task;
         }
 
-        public bool RemoveTask(int id)
+        public Task<TaskItem?> GetByIdAsync(int id)
+        {
+            var result = GetById(id);
+            return Task.FromResult(result);
+        }
+
+        private bool RemoveTask(int id)
         {
             TaskItem taskToDelete = _tasks.Find(x => x.Id == id);
             if (taskToDelete != null)
@@ -28,23 +36,18 @@
             return false;
         }
 
-        public List<TaskItem> GetAll()
+        public Task<bool> RemoveTaskAsync(int id)
         {
-            return _tasks.ToList();
+            var result = RemoveTask(id);
+            return Task.FromResult(result);
         }
 
-        public bool MarkAsCompleted(int id)
+        public Task<List<TaskItem>> GetAllAsync()
         {
-            TaskItem taskToMark = _tasks.Find(x => x.Id == id);
-            if (taskToMark != null)
-            {
-                taskToMark.IsCompleted = true;
-                return true;
-            }
-            return false;
+            return Task.FromResult(_tasks.ToList());
         }
-
-        public bool UpdateTask(int id, string name, string? description, bool isCompleted)
+       
+        private bool UpdateTask(int id, string name, string? description, bool isCompleted)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Пустое название задачи");
             var taskToUpdate = _tasks.Find(x => x.Id == id);
@@ -57,6 +60,12 @@
                 return true;
             }
             return false;
+        }
+
+        public Task<bool> UpdateTaskAsync(int id, string name, string? description, bool isCompleted)
+        {
+            var result = UpdateTask(id, name, description, isCompleted);
+            return Task.FromResult(result);
         }
     }
 }

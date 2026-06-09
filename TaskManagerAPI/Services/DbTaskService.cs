@@ -1,4 +1,5 @@
-﻿using TaskManagerAPI.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.Data;
 
 namespace TaskManagerAPI.Services
 {
@@ -10,45 +11,46 @@ namespace TaskManagerAPI.Services
             _dbContext = dbContext;
         }
 
-        public List<TaskItem> GetAll()
+        public async Task<List<TaskItem>> GetAllAsync()
         {
-            return _dbContext.Tasks.ToList();
+            return await _dbContext.Tasks.ToListAsync();
+
         }
         
-        public TaskItem? GetById(int id)
+        public async Task<TaskItem?> GetByIdAsync(int id)
         {
-            return _dbContext.Tasks.Find(id);
+            return await _dbContext.Tasks.FindAsync(id);
         }
 
-        public void AddTask(string name, string? description)
+        public async Task AddTaskAsync(string name, string? description)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Пустое название задачи");
-            var task = new TaskItem(name, description);
-            _dbContext.Tasks.Add(task);
-            _dbContext.SaveChanges();
+            var item = new TaskItem(name, description);
+            _dbContext.Tasks.Add(item);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public bool RemoveTask(int id)
+        public async Task<bool> RemoveTaskAsync(int id)
         {
-            var taskToRemove = _dbContext.Tasks.Find(id);
+            var taskToRemove = await _dbContext.Tasks.FindAsync(id);
             if (taskToRemove == null) return false;
 
             _dbContext.Tasks.Remove(taskToRemove);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return true;
         }
 
-        public bool UpdateTask(int id, string name, string? description, bool isCompleted)
+        public async Task<bool> UpdateTaskAsync(int id, string name, string? description, bool isCompleted)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Пустое название задачи");
-            var taskToUpdate = _dbContext.Tasks.Find(id);
+            var taskToUpdate = await _dbContext.Tasks.FindAsync(id);
             if (taskToUpdate == null) return false;
 
             taskToUpdate.Name = name;
             taskToUpdate.Description = description;
             taskToUpdate.IsCompleted = isCompleted;
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return true;
         }
     }

@@ -15,39 +15,39 @@ namespace TaskManagerAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(_taskService.GetAll());
+            return Ok(await _taskService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var task = _taskService.GetById(id);
+            var task = await _taskService.GetByIdAsync(id);
             if (task == null) return NotFound();
             return Ok(task);
         }
 
 
         [HttpPost] 
-        public IActionResult CreateTask([FromBody] TaskItemDTO task)
+        public async Task<IActionResult> CreateTaskAsync([FromBody] TaskItemDTO task)
         {
-            _taskService.AddTask(task.Name, task.Description);
+            await _taskService.AddTaskAsync(task.Name, task.Description);
             return Created();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateTask(int id, [FromBody] UpdateTaskRequest task)
+        public async Task<IActionResult> UpdateTaskAsync(int id, [FromBody] UpdateTaskRequest task)
         {
-            if (_taskService.UpdateTask(id, task.Name, task.Description, task.isCompleted)) return Ok($"Задача №{id} обновлена.");
-            else return NoContent();
+            if (await _taskService.UpdateTaskAsync(id, task.Name, task.Description, task.isCompleted)) return Ok($"Задача №{id} обновлена.");
+            else return NotFound();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTaskAsync(int id)
         {
-            if (_taskService.RemoveTask(id)) return Ok($"Задача №{id} удалена.");
-            else return NoContent();
+            if (await _taskService.RemoveTaskAsync(id)) return Ok($"Задача №{id} удалена.");
+            else return NotFound();
         }
     }
 }
