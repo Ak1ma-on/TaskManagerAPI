@@ -10,7 +10,7 @@ using TaskManagerAPI.Data;
 namespace TaskManagerAPI.Migrations
 {
     [DbContext(typeof(DbTaskContext))]
-    [Migration("20260609141741_InitialCreate")]
+    [Migration("20260613100220_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,9 +35,44 @@ namespace TaskManagerAPI.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TaskItem", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
